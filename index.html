@@ -1,0 +1,968 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD JavaScript - SMKN 1 Garut (Halaman 4-9)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+        }
+
+        /* Printable Paper Page Layout */
+        .paper-page {
+            background: #ffffff;
+            width: 100%;
+            max-width: 840px;
+            margin: 0 auto 28px auto;
+            padding: 40px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .paper-footer {
+            border-top: 2px solid #000000;
+            padding-top: 8px;
+            margin-top: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .code-box {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #0284c7;
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            padding: 10px 14px;
+            border-radius: 4px;
+            line-height: 1.6;
+            color: #0f172a;
+        }
+
+        .lkpd-input {
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            outline: none;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+
+        .lkpd-input:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+        }
+
+        .lkpd-table th, .lkpd-table td {
+            border: 1px solid #64748b;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .lkpd-table th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+        }
+
+        /* Print Override CSS */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .paper-page {
+                box-shadow: none !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 20px !important;
+                page-break-after: always;
+            }
+            .paper-page:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body class="py-6 px-2 sm:px-4">
+
+    <!-- Floating Navigation Bar & Actions -->
+    <div class="no-print fixed top-3 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 backdrop-blur-md text-white px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-3 text-xs max-w-[95vw] overflow-x-auto">
+        <span class="font-bold text-sky-400 border-r border-slate-700 pr-3 flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-file-code"></i> LKPD PPLG
+        </span>
+        <div class="flex items-center gap-1 font-semibold">
+            <a href="#hal-4" class="px-2.5 py-1 hover:bg-slate-800 rounded-lg transition whitespace-nowrap">Hal 4 (B)</a>
+            <a href="#hal-5" class="px-2.5 py-1 hover:bg-slate-800 rounded-lg transition whitespace-nowrap">Hal 5</a>
+            <a href="#hal-6" class="px-2.5 py-1 hover:bg-slate-800 rounded-lg transition whitespace-nowrap">Hal 6 (C)</a>
+            <a href="#hal-7" class="px-2.5 py-1 hover:bg-slate-800 rounded-lg transition whitespace-nowrap">Hal 7</a>
+            <a href="#hal-8" class="px-2.5 py-1 hover:bg-slate-800 rounded-lg transition whitespace-nowrap">Hal 8 (D-F)</a>
+            <a href="#hal-9" class="px-2.5 py-1 hover:bg-slate-800 rounded-lg transition whitespace-nowrap">Hal 9 (G-H)</a>
+        </div>
+        <div class="border-l border-slate-700 pl-3 flex items-center gap-2">
+            <button onclick="toggleConsole()" class="bg-sky-600 hover:bg-sky-500 font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 whitespace-nowrap">
+                <i class="fa-solid fa-terminal"></i> Console Output
+            </button>
+            <button onclick="saveAllProgress()" class="bg-emerald-600 hover:bg-emerald-500 font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 whitespace-nowrap">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan
+            </button>
+            <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 text-slate-950 whitespace-nowrap">
+                <i class="fa-solid fa-print"></i> Cetak / PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Floating Console Drawer -->
+    <div id="console-drawer" class="no-print fixed bottom-0 left-0 right-0 z-40 bg-slate-950 text-slate-100 border-t-2 border-sky-500 shadow-2xl transition-all duration-300 transform translate-y-full max-h-60 flex flex-col">
+        <div class="bg-slate-900 px-4 py-2 border-b border-slate-800 flex justify-between items-center text-xs font-bold">
+            <span class="text-sky-400 flex items-center gap-2">
+                <i class="fa-solid fa-terminal"></i> SIMULATOR TERMINAL JAVASCRIPT
+            </span>
+            <div class="flex gap-2">
+                <button onclick="clearConsole()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-trash"></i> Bersihkan</button>
+                <button onclick="toggleConsole()" class="text-slate-400 hover:text-white ml-2"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+        </div>
+        <div id="console-logs" class="p-4 font-mono text-xs overflow-y-auto space-y-1.5 text-emerald-400 flex-1">
+            <span class="text-slate-500">// Console output akan muncul di sini saat Anda menjalankan simulasi kode...</span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER - TOP TO BOTTOM PAGE SCROLL -->
+    <div class="max-w-[840px] mx-auto space-y-8 pt-10">
+
+        <!-- ================= HALAMAN 4 ================= -->
+        <section id="hal-4" class="paper-page">
+            <div class="border-b-2 border-black pb-3 mb-4">
+                <h2 class="text-lg font-black text-black tracking-wide">B. LKPD - INPUT, OUTPUT & OPERATOR</h2>
+                
+                <!-- Student Header Fields -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold whitespace-nowrap">Nama:</span>
+                        <input type="text" id="stu-nama" class="lkpd-input w-full font-semibold" value="Muhamad aldhan nur rohmat">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold whitespace-nowrap">Kelas:</span>
+                        <input type="text" id="stu-kelas" class="lkpd-input w-full font-semibold" value="X PPLG 2">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold whitespace-nowrap">Tanggal:</span>
+                        <input type="date" id="stu-tanggal" class="lkpd-input w-full font-semibold">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Petunjuk -->
+            <div class="mb-5 text-xs">
+                <h3 class="font-bold underline mb-1">Petunjuk</h3>
+                <ul class="list-disc pl-5 space-y-0.5 text-slate-800">
+                    <li>Kerjakan berurutan.</li>
+                    <li>Jalankan setiap kode dan amati hasilnya.</li>
+                    <li>Pahami fungsi setiap baris, jangan sekadar menyalin.</li>
+                    <li>Jika error, baca pesan error dan cari penyebabnya.</li>
+                    <li>Diskusikan bagian yang sulit dengan pasangan/kelompok.</li>
+                </ul>
+            </div>
+
+            <!-- Aktivitas 1 -->
+            <div class="mb-6">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 1 - Prediksi</h3>
+                <div class="code-box mb-3">
+                    let a = 10;<br>
+                    let b = 5;<br>
+                    console.log(a + b);<br>
+                    console.log(a - b);<br>
+                    console.log(a * b);<br>
+                    console.log(a / b);
+                </div>
+                <img src="enamygirl.png"width ="600" height="700"
+
+                <div class="overflow-x-auto mb-3">
+                    <table class="lkpd-table w-full">
+                        <thead>
+                            <tr>
+                                <th class="w-1/4 text-left">Operasi</th>
+                                <th class="w-1/3 text-left">Prediksi</th>
+                                <th class="w-1/3 text-left">Hasil sebenarnya</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-mono font-bold">a + b</td>
+                                <td><input type="text" id="act1-p-add" class="lkpd-input w-full" placeholder="Prediksi..."></td>
+                                <td id="act1-r-add" class="font-mono font-bold text-sky-700">-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono font-bold">a - b</td>
+                                <td><input type="text" id="act1-p-sub" class="lkpd-input w-full" placeholder="Prediksi..."></td>
+                                <td id="act1-r-sub" class="font-mono font-bold text-sky-700">-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono font-bold">a * b</td>
+                                <td><input type="text" id="act1-p-mul" class="lkpd-input w-full" placeholder="Prediksi..."></td>
+                                <td id="act1-r-mul" class="font-mono font-bold text-sky-700">-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-mono font-bold">a / b</td>
+                                <td><input type="text" id="act1-p-div" class="lkpd-input w-full" placeholder="Prediksi..."></td>
+                                <td id="act1-r-div" class="font-mono font-bold text-sky-700">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center mb-3">
+                    <button onclick="runAct1()" class="no-print bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-1.5 px-3 rounded shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-play"></i> Jalankan & Eksekusi Kode
+                    </button>
+                </div>
+
+                <div class="space-y-2 text-xs bg-slate-50 p-3 rounded border border-slate-200">
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold">Apakah prediksi kamu benar?</span>
+                        <div class="flex gap-3">
+                            <label class="flex items-center gap-1"><input type="radio" name="act1-correct" value="Ya"> Ya</label>
+                            <label class="flex items-center gap-1"><input type="radio" name="act1-correct" value="Sebagian"> Sebagian</label>
+                            <label class="flex items-center gap-1"><input type="radio" name="act1-correct" value="Tidak"> Tidak</label>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold whitespace-nowrap">Mengapa?</span>
+                        <input type="text" id="act1-reason" class="lkpd-input w-full" placeholder="Tulis alasan...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aktivitas 2 -->
+            <div class="mb-4">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 2 - Eksperimen</h3>
+                <div class="code-box mb-3">
+                    let a = 20;<br>
+                    let b = 4;<br>
+                    console.log(a + b);<br>
+                    console.log(a - b);<br>
+                    console.log(a * b);<br>
+                    console.log(a / b);<br>
+                    console.log(a % b);
+                </div>
+                <img src="enamywife.png" width="600" height="700"
+
+                <div class="text-xs space-y-2 mb-3">
+                    <div class="font-bold">Prediksi:</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 font-mono">
+                        <div>a+b = <input type="text" id="act2-p-add" class="lkpd-input w-16"></div>
+                        <div>a-b = <input type="text" id="act2-p-sub" class="lkpd-input w-16"></div>
+                        <div>a*b = <input type="text" id="act2-p-mul" class="lkpd-input w-16"></div>
+                        <div>a/b = <input type="text" id="act2-p-div" class="lkpd-input w-16"></div>
+                        <div>a%b = <input type="text" id="act2-p-mod" class="lkpd-input w-16"></div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mb-3">
+                    <button onclick="runAct2()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1.5 px-3 rounded shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-vial"></i> Uji Eksperimen
+                    </button>
+                </div>
+
+                <div class="text-xs">
+                    <span class="font-bold block mb-1">Apa yang kamu temukan?</span>
+                    <textarea id="act2-finding" rows="2" class="lkpd-input w-full" placeholder="Tuliskan temuan analisis tentang operator modulus (%) dll..."></textarea>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="paper-footer">
+                <span>SMKN 1 GARUT Dasar-Dasar PPLG JavaScript</span>
+                <span>Halaman 4</span>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 5 ================= -->
+        <section id="hal-5" class="paper-page">
+            
+            <!-- Aktivitas 3 -->
+            <div class="mb-6">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 3 - Input dengan prompt()</h3>
+                <div class="code-box mb-3">
+                    let nama = prompt("Masukkan nama:");<br>
+                    console.log(nama);<br>
+                    let umur = prompt("Masukkan umur:");<br>
+                    console.log(umur);
+                </div>
+                <img src="iloveena.png" width="400" height="550"
+</div>
+            <img src="enamyheart.png" width="400" height="550"
+            <div></div>
+            <img src="enamylittlekid.png" width="400" height="550"
+            
+
+                <div class="flex justify-start mb-3">
+                    <button onclick="runAct3()" class="no-print bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-1.5 px-3 rounded shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-window-restore"></i> Simulasi Dialog prompt()
+                    </button>
+                </div>
+                <div class="text-xs">
+                    <span class="font-bold block mb-1">Apa fungsi prompt()?</span>
+                    <textarea id="act3-func" rows="2" class="lkpd-input w-full" placeholder="Tuliskan jawaban fungsi prompt()..."></textarea>
+                </div>
+            </div>
+
+            <!-- Aktivitas 4 -->
+            <div class="mb-6">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 4 - Menghitung Umur</h3>
+                <div class="code-box mb-3">
+                    let tahunLahir = prompt("Masukkan tahun lahir:");<br>
+                    let tahunSekarang = 2026;<br>
+                    let umur = tahunSekarang - tahunLahir;<br>
+                    console.log(umur);
+                </div>
+                <img src="tahun lahir.png"
+            </div>
+            <img src="umur.png"
+                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs flex flex-wrap items-center gap-3 mb-3">
+                    <span class="font-bold">Uji dengan tahun lahir kamu:</span>
+                    <input type="number" id="act4-birth" class="lkpd-input w-28" placeholder="Tahun lahir" value="2009">
+                    <button onclick="runAct4()" class="no-print bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-1 px-3 rounded">Hitung</button>
+                    <span class="font-bold">Umur = <span id="act4-res" class="text-sky-700 font-mono text-sm underline">...</span> tahun</span>
+                </div>
+            </div>
+
+            <!-- Aktivitas 5 -->
+            <div class="mb-6">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 5 - Mesin Kasir Mini</h3>
+                <div class="code-box mb-3">
+                    let harga = prompt("Masukkan harga:");<br>
+                    let jumlah = prompt("Masukkan jumlah:");<br>
+                    let total = harga * jumlah;<br>
+                    console.log(total);
+                </div>
+                <img src="simulasi 1.png"
+            </div>
+            <img src="simulasi 2.png"
+        </div>
+        <img src="simulasi akhir.png"
+                <div  class="bg-slate-50 p-3 rounded border border-slate-200 text-xs flex flex-wrap items-center gap-3 mb-3">
+                    <span class="font-bold">Uji Simulasi Kasir:</span>
+                    <span>Harga: <input type="number" id="act5-price" class="lkpd-input w-24" value="5000"></span>
+                    <span>Jumlah: <input type="number" id="act5-qty" class="lkpd-input w-16" value="4"></span>
+                    <button onclick="runAct5()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1 px-3 rounded">Uji Kasir</button>
+                    <span class="font-bold">Total = Rp <span id="act5-tot" class="text-emerald-700 font-mono text-sm underline">20000</span></span>
+                </div>
+            </div>
+
+            <!-- Aktivitas 6 -->
+            <div class="mb-6">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 6 - Think Pair Share</h3>
+                <div class="space-y-3 text-xs bg-slate-50 p-3 rounded border border-slate-200">
+                    <div>
+                        <span class="font-bold block mb-1">THINK: Mengapa membutuhkan variable total?</span>
+                        <textarea id="tps-think" rows="2" class="lkpd-input w-full" placeholder="Tulis pendapat mandiri..."></textarea>
+                    </div>
+                    <div class="flex items-center gap-3 border-t border-slate-200 pt-2">
+                        <span class="font-bold">PAIR: Jawaban sama?</span>
+                        <label class="flex items-center gap-1"><input type="radio" name="tps-same" value="Ya"> Ya</label>
+                        <label class="flex items-center gap-1"><input type="radio" name="tps-same" value="Tidak"> Tidak</label>
+                    </div>
+                    <div class="border-t border-slate-200 pt-2">
+                        <span class="font-bold block mb-1">Jika berbeda - SHARE: Kesimpulan kelompok:</span>
+                        <textarea id="tps-share" rows="2" class="lkpd-input w-full" placeholder="Tuliskan kesimpulan diskusi..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aktivitas 7 -->
+            <div class="mb-4">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 7 - Challenge: Warung Digital</h3>
+                <p class="text-xs mb-2">Buat program yang meminta nama makanan, harga, dan jumlah. Tampilkan nama, harga, jumlah, dan total.</p>
+                <div class="code-box mb-3">
+                    let makanan = prompt("Nama makanan:");<br>
+                    let harga = prompt("Harga:");<br>
+                    let jumlah = prompt("Jumlah:");<br>
+                    let total = harga * jumlah;<br>
+                    console.log(makanan); console.log(harga); console.log(jumlah); console.log(total);<br><br>
+                    <span class="text-slate-500">// Kembangkan dengan diskon 10%:</span><br>
+                    let diskon = total * 10 / 100;<br>
+                    let bayar = total - diskon;
+                </div>
+                <!-- Interactive Warung Simulator -->
+                 <img src="ayam goreng.png"
+            </div>
+            <img src="harga.png"
+        </div>
+        <img src="total ayam.png"
+    </div>
+    <img src="jumlah.png"
+            
+                <div class="bg-amber-50 p-3 rounded border border-amber-200 text-xs space-y-2">
+                    <span class="font-bold text-amber-900 block">Simulasi Interactive Warung Digital:</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <input type="text" id="w-food" class="lkpd-input" placeholder="Nama Makanan" value="Ayam Goreng">
+                        <input type="number" id="w-price" class="lkpd-input" placeholder="Harga" value="15000">
+                        <input type="number" id="w-qty" class="lkpd-input" placeholder="Jumlah" value="2">
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-amber-200">
+                        <button onclick="runAct7()" class="no-print bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-1 px-3 rounded">Hitung Warung</button>
+                        <div class="font-bold text-amber-900 space-x-2">
+                            <span>Total: <span id="w-tot" class="font-mono">Rp 30.000</span></span> |
+                            <span>Diskon (10%): <span id="w-disc" class="font-mono text-red-600">Rp 3.000</span></span> |
+                            <span>Bayar: <span id="w-pay" class="font-mono text-emerald-700 underline">Rp 27.000</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="paper-footer">
+                <span>SMKN 1 GARUT Dasar-Dasar PPLG JavaScript</span>
+                <span>Halaman 5</span>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 6 ================= -->
+        <section id="hal-6" class="paper-page">
+            
+            <!-- Aktivitas 8 -->
+            <div class="mb-6">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 8 - Debugging</h3>
+                <div class="code-box mb-3 text-red-700 border-red-300 bg-red-50">
+                    let harga = 5000;<br>
+                    let jumlah = 3;<br>
+                    let total harga = harga * jumlah; <span class="text-slate-500">// Error</span><br>
+                    console.log(total harga);
+                </div>
+                <div class="space-y-3 text-xs mb-3">
+                    <div>
+                        <span class="font-bold block mb-1">Kesalahan:</span>
+                        <input type="text" id="bug-err" class="lkpd-input w-full" placeholder="Jelaskan di mana letak kesalahannya...">
+                    </div>
+                    <div>
+                        <span class="font-bold block mb-1">Perbaikan kode:</span>
+                        <textarea id="bug-fix" rows="3" class="lkpd-input w-full font-mono text-xs" placeholder="Tuliskan kode yang sudah benar..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aktivitas 9 -->
+            <div class="mb-8">
+                <h3 class="font-bold text-xs mb-2">Aktivitas 9 - Challenge Mandiri: Kalkulator Tabungan</h3>
+                <p class="text-xs mb-2">Buat program yang meminta uang awal, tabungan hari pertama, kedua, dan ketiga, lalu menghitung total.</p>
+                <div class="bg-sky-50 p-3 rounded border border-sky-200 text-xs space-y-2 mb-3">
+                    <span class="font-bold text-sky-900 block">Uji Challenge Kalkulator Tabungan:</span>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div>Uang Awal: <input type="number" id="tab-init" class="lkpd-input w-full" value="50000"></div>
+                        <div>Hari 1: <input type="number" id="tab-d1" class="lkpd-input w-full" value="10000"></div>
+                        <div>Hari 2: <input type="number" id="tab-d2" class="lkpd-input w-full" value="15000"></div>
+                        <div>Hari 3: <input type="number" id="tab-d3" class="lkpd-input w-full" value="20000"></div>
+                    </div>
+                    <div class="flex justify-between items-center pt-2">
+                        <button onclick="runAct9()" class="no-print bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-1 px-3 rounded">Hitung Tabungan</button>
+                        <div class="text-sm font-bold text-sky-950">
+                            Total tabungan = <span id="tab-res" class="font-mono text-emerald-700 underline">Rp 95.000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION C: BAHAN AJAR -->
+            <div id="sec-c" class="border-t-2 border-black pt-4">
+                <h2 class="text-lg font-black text-black tracking-wide mb-4">C. BAHAN AJAR</h2>
+                
+                <div class="space-y-4 text-xs leading-relaxed text-slate-800">
+                    <div>
+                        <h4 class="font-bold">1. Mengingat Variable</h4>
+                        <p>Variable adalah tempat untuk menyimpan data.</p>
+                        <div class="code-box mt-1">
+                            let nama = "Budi";<br>
+                            let umur = 17;<br>
+                            let nilai = 85;
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold">2. Input - Process - Output</h4>
+                        <div class="flex justify-center items-center gap-3 font-bold my-2 py-2 bg-slate-100 rounded text-center">
+                            <span class="bg-sky-200 px-3 py-1 rounded">INPUT</span> &rarr; 
+                            <span class="bg-amber-200 px-3 py-1 rounded">PROCESS</span> &rarr; 
+                            <span class="bg-emerald-200 px-3 py-1 rounded">OUTPUT</span>
+                        </div>
+                        <div class="code-box">
+                            let harga = 5000;<br>
+                            let jumlah = 3;<br>
+                            let total = harga * jumlah;<br>
+                            console.log(total);
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold">3. Output dengan console.log()</h4>
+                        <div class="code-box">
+                            console.log("Halo");<br>
+                            let nama = "Budi";<br>
+                            console.log(nama);<br>
+                            console.log("Nama saya adalah", nama);
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="paper-footer">
+                <span>SMKN 1 GARUT Dasar-Dasar PPLG JavaScript</span>
+                <span>Halaman 6</span>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 7 ================= -->
+        <section id="hal-7" class="paper-page">
+            <div class="space-y-5 text-xs leading-relaxed text-slate-800">
+                <div>
+                    <h4 class="font-bold">4. Input dengan prompt()</h4>
+                    <div class="code-box mt-1">
+                        let nama = prompt("Masukkan nama:");<br>
+                        console.log(nama);
+                    </div>
+                    <p class="mt-1 italic text-slate-600">Alur: Pengguna mengetik &rarr; prompt() &rarr; variable &rarr; console.log().</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-1">5. Operator Aritmatika</h4>
+                    <table class="lkpd-table w-full">
+                        <thead>
+                            <tr>
+                                <th>Operator</th>
+                                <th>Fungsi</th>
+                                <th>Contoh</th>
+                                <th>Hasil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="text-center font-bold font-mono">+</td><td>Penjumlahan</td><td class="font-mono">10 + 5</td><td class="font-mono font-bold">15</td></tr>
+                            <tr><td class="text-center font-bold font-mono">-</td><td>Pengurangan</td><td class="font-mono">10 - 5</td><td class="font-mono font-bold">5</td></tr>
+                            <tr><td class="text-center font-bold font-mono">*</td><td>Perkalian</td><td class="font-mono">10 * 5</td><td class="font-mono font-bold">50</td></tr>
+                            <tr><td class="text-center font-bold font-mono">/</td><td>Pembagian</td><td class="font-mono">10 / 5</td><td class="font-mono font-bold">2</td></tr>
+                            <tr><td class="text-center font-bold font-mono">%</td><td>Sisa pembagian (Modulus)</td><td class="font-mono">10 % 3</td><td class="font-mono font-bold">1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h4 class="font-bold">6. Variable dalam Perhitungan</h4>
+                    <div class="code-box mt-1">
+                        let nilai1 = 80;<br>
+                        let nilai2 = 90;<br>
+                        let total = nilai1 + nilai2;<br>
+                        console.log(total);
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold">7. Contoh Kehidupan Nyata</h4>
+                    <p>Harga satu buku Rp10.000 dan membeli 3 buku:</p>
+                    <div class="code-box mt-1">
+                        let harga = 10000;<br>
+                        let jumlah = 3;<br>
+                        let total = harga * jumlah;<br>
+                        console.log(total); <span class="text-slate-500">// Hasilnya 30000</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold">8. Pola Dasar Program</h4>
+                    <div class="code-box mt-1">
+                        let data1 = ...<br>
+                        let data2 = ...<br>
+                        let hasil = data1 OPERASI data2;<br>
+                        console.log(hasil);
+                    </div>
+                    <div class="code-box mt-2">
+                        let panjang = 10;<br>
+                        let lebar = 5;<br>
+                        let luas = panjang * lebar;<br>
+                        console.log(luas);
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold">9. Catatan tentang prompt()</h4>
+                    <p>Hasil prompt() secara umum diterima sebagai teks/string. Untuk mengubahnya menjadi angka dapat digunakan <code>Number()</code>.</p>
+                    <div class="code-box mt-1">
+                        let angka = Number(prompt("Masukkan angka:"));
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="paper-footer">
+                <span>SMKN 1 GARUT Dasar-Dasar PPLG JavaScript</span>
+                <span>Halaman 7</span>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 8 ================= -->
+        <section id="hal-8" class="paper-page">
+            
+            <!-- SECTION D: ASESMEN FORMATIF -->
+            <div id="sec-d" class="mb-6">
+                <h2 class="text-lg font-black text-black tracking-wide mb-3">D. ASESMEN FORMATIF</h2>
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <p class="font-semibold mb-1">• Apa output dari <code>let a = 8; let b = 2; console.log(a + b);</code>?</p>
+                        <input type="text" id="as1-ans" class="lkpd-input w-full" placeholder="Jawaban...">
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-1">• Apa output dari <code>let a = 10; let b = 3; console.log(a % b);</code>?</p>
+                        <input type="text" id="as2-ans" class="lkpd-input w-full" placeholder="Jawaban...">
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-1">• Apa fungsi prompt()?</p>
+                        <input type="text" id="as3-ans" class="lkpd-input w-full" placeholder="Jawaban...">
+                    </div>
+                    <div>
+                        <p class="font-semibold mb-1">• Buat program menghitung luas persegi panjang dengan panjang 10 dan lebar 5.</p>
+                        <textarea id="as4-ans" rows="3" class="lkpd-input w-full font-mono" placeholder="let panjang = 10; ..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION E: RUBRIK PENILAIAN -->
+            <div id="sec-e" class="mb-6">
+                <h2 class="text-lg font-black text-black tracking-wide mb-2">E. RUBRIK PENILAIAN</h2>
+                <div class="overflow-x-auto mb-2">
+                    <table class="lkpd-table w-full">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Aspek</th>
+                                <th class="w-12 text-center">1</th>
+                                <th class="w-12 text-center">2</th>
+                                <th class="w-12 text-center">3</th>
+                                <th class="w-12 text-center">4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <script>
+                                const aspects = [
+                                    "Memahami input-output",
+                                    "Penggunaan variable",
+                                    "Penggunaan operator",
+                                    "Penggunaan prompt()",
+                                    "Ketepatan program",
+                                    "Debugging",
+                                    "Kemandirian",
+                                    "Kreativitas"
+                                ];
+                                aspects.forEach((asp, idx) => {
+                                    document.write(`
+                                        <tr>
+                                            <td>${asp}</td>
+                                            <td class="text-center"><input type="radio" name="rub-${idx}" value="1" onclick="calcRubric()"></td>
+                                            <td class="text-center"><input type="radio" name="rub-${idx}" value="2" onclick="calcRubric()"></td>
+                                            <td class="text-center"><input type="radio" name="rub-${idx}" value="3" onclick="calcRubric()"></td>
+                                            <td class="text-center"><input type="radio" name="rub-${idx}" value="4" checked onclick="calcRubric()"></td>
+                                        </tr>
+                                    `);
+                                });
+                            </script>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-xs italic text-slate-600 mb-2">
+                    Keterangan: 4 = mandiri dan benar; 3 = benar dengan sedikit bantuan; 2 = masih membutuhkan bimbingan; 1 = belum mampu.
+                </div>
+                <div class="bg-slate-100 p-2 rounded text-xs font-bold flex justify-between">
+                    <span>Total Skor Rubrik Penilaian:</span>
+                    <span id="rub-score-display" class="text-sky-700 font-mono text-sm">32 / 32 (100%)</span>
+                </div>
+            </div>
+
+            <!-- SECTION F: REFLEKSI PEMBELAJARAN MENDALAM -->
+            <div id="sec-f" class="mb-4">
+                <h2 class="text-lg font-black text-black tracking-wide mb-3">F. REFLEKSI PEMBELAJARAN MENDALAM</h2>
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <span class="font-bold block mb-1">Berkesadaran: Hari ini saya menyadari bahwa</span>
+                        <textarea id="ref-aware" rows="2" class="lkpd-input w-full" placeholder="..."></textarea>
+                    </div>
+                    <div>
+                        <span class="font-bold block mb-1">Bermakna: Materi ini dapat digunakan untuk</span>
+                        <textarea id="ref-meaning" rows="2" class="lkpd-input w-full" placeholder="..."></textarea>
+                    </div>
+                    <div>
+                        <span class="font-bold block mb-1">Menggembirakan: Bagian pembelajaran yang paling saya sukai</span>
+                        <textarea id="ref-joy" rows="2" class="lkpd-input w-full" placeholder="..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="paper-footer">
+                <span>SMKN 1 GARUT Dasar-Dasar PPLG JavaScript</span>
+                <span>Halaman 8</span>
+            </div>
+        </section>
+
+        <!-- ================= HALAMAN 9 ================= -->
+        <section id="hal-9" class="paper-page">
+            
+            <!-- SECTION G: EXIT TICKET -->
+            <div id="sec-g" class="mb-8">
+                <h2 class="text-lg font-black text-black tracking-wide mb-3">G. EXIT TICKET</h2>
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <span class="font-bold block mb-1">1. Satu hal yang sudah saya kuasai:</span>
+                        <input type="text" id="exit-1" class="lkpd-input w-full" placeholder="...">
+                    </div>
+                    <div>
+                        <span class="font-bold block mb-1">2. Satu hal yang masih membingungkan:</span>
+                        <input type="text" id="exit-2" class="lkpd-input w-full" placeholder="...">
+                    </div>
+                    <div>
+                        <span class="font-bold block mb-1">3. Satu hal yang ingin saya coba:</span>
+                        <input type="text" id="exit-3" class="lkpd-input w-full" placeholder="...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION H: URUTAN MATERI SELANJUTNYA -->
+            <div id="sec-h" class="mb-4">
+                <h2 class="text-lg font-black text-black tracking-wide mb-4">H. URUTAN MATERI SELANJUTNYA</h2>
+                
+                <div class="max-w-md mx-auto text-xs space-y-1 text-center font-medium">
+                    <div class="bg-slate-100 p-2 rounded">1. Pengenalan JavaScript</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-100 p-2 rounded">2. Variable</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-sky-600 text-white font-bold p-2.5 rounded shadow-lg border-2 border-sky-400 animate-pulse">
+                        3. Input Output Aritmatika <span class="bg-yellow-400 text-slate-950 text-[10px] px-1.5 py-0.5 rounded ml-1 font-black">SEKARANG</span>
+                    </div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">4. Number & String + Konversi Data</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">5. Operator Perbandingan</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">6. Boolean</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">7. Percabangan if</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">8. if - else</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">9. else if</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">10. Nested if</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">11. Perulangan</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">12. Array</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">13. Function</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">14. Object</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">15. DOM</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">16. Event</div>
+                    <div class="text-slate-400">&darr;</div>
+                    <div class="bg-slate-50 p-1.5 rounded text-slate-600">17. Mini Project</div>
+                </div>
+            </div>
+
+            <!-- Page Footer -->
+            <div class="paper-footer">
+                <span>SMKN 1 GARUT Dasar-Dasar PPLG JavaScript</span>
+                <span>Halaman 9</span>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript Interactive Logic -->
+    <script>
+        // Set default date to today
+        document.getElementById('stu-tanggal').value = new Date().toISOString().split('T')[0];
+
+        function toggleConsole() {
+            const drawer = document.getElementById('console-drawer');
+            drawer.classList.toggle('translate-y-full');
+        }
+
+        function logConsole(msg) {
+            const logs = document.getElementById('console-logs');
+            const entry = document.createElement('div');
+            entry.textContent = `> ${msg}`;
+            logs.appendChild(entry);
+            logs.scrollTop = logs.scrollHeight;
+
+            // Automatically reveal console if hidden
+            document.getElementById('console-drawer').classList.remove('translate-y-full');
+        }
+
+        function clearConsole() {
+            document.getElementById('console-logs').innerHTML = '<span class="text-slate-500">// Console dibersihkan.</span>';
+        }
+
+        // Aktivitas 1 Runner
+        function runAct1() {
+            let a = 10;
+            let b = 5;
+            let add = a + b;
+            let sub = a - b;
+            let mul = a * b;
+            let div = a / b;
+
+            document.getElementById('act1-r-add').innerText = add;
+            document.getElementById('act1-r-sub').innerText = sub;
+            document.getElementById('act1-r-mul').innerText = mul;
+            document.getElementById('act1-r-div').innerText = div;
+
+            logConsole(`[Act 1] a=10, b=5 | a+b=${add}, a-b=${sub}, a*b=${mul}, a/b=${div}`);
+        }
+
+        // Aktivitas 2 Runner
+        function runAct2() {
+            let a = 20;
+            let b = 4;
+            logConsole(`[Act 2] a=20, b=4 | a+b=${a+b}, a-b=${a-b}, a*b=${a*b}, a/b=${a/b}, a%b=${a%b}`);
+        }
+
+        // Aktivitas 3 Runner
+        function runAct3() {
+            let nama = prompt("Masukkan nama:");
+            if(nama !== null) {
+                logConsole(`[Act 3] Input Nama: ${nama}`);
+                let umur = prompt("Masukkan umur:");
+                if(umur !== null) {
+                    logConsole(`[Act 3] Input Umur: ${umur}`);
+                }
+            }
+        }
+
+        // Aktivitas 4 Runner
+        function runAct4() {
+            let tahunLahir = parseFloat(document.getElementById('act4-birth').value);
+            let tahunSekarang = 2026;
+            let umur = tahunSekarang - tahunLahir;
+            document.getElementById('act4-res').innerText = umur;
+            logConsole(`[Act 4] Tahun Lahir: ${tahunLahir}, Tahun Sekarang: 2026 => Umur = ${umur} tahun`);
+        }
+
+        // Aktivitas 5 Runner
+        function runAct5() {
+            let harga = parseFloat(document.getElementById('act5-price').value) || 0;
+            let jumlah = parseFloat(document.getElementById('act5-qty').value) || 0;
+            let total = harga * jumlah;
+            document.getElementById('act5-tot').innerText = total;
+            logConsole(`[Act 5] Harga: ${harga}, Jumlah: ${jumlah} => Total = Rp${total}`);
+        }
+
+        // Aktivitas 7 Runner
+        function runAct7() {
+            let makanan = document.getElementById('w-food').value;
+            let harga = parseFloat(document.getElementById('w-price').value) || 0;
+            let jumlah = parseFloat(document.getElementById('w-qty').value) || 0;
+            let total = harga * jumlah;
+            let diskon = total * 10 / 100;
+            let bayar = total - diskon;
+
+            document.getElementById('w-tot').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('w-disc').innerText = `Rp ${diskon.toLocaleString('id-ID')}`;
+            document.getElementById('w-pay').innerText = `Rp ${bayar.toLocaleString('id-ID')}`;
+
+            logConsole(`[Act 7 Warung] Makanan: ${makanan}, Total: Rp${total}, Diskon: Rp${diskon}, Total Bayar: Rp${bayar}`);
+        }
+
+        // Aktivitas 9 Runner
+        function runAct9() {
+            let init = parseFloat(document.getElementById('tab-init').value) || 0;
+            let d1 = parseFloat(document.getElementById('tab-d1').value) || 0;
+            let d2 = parseFloat(document.getElementById('tab-d2').value) || 0;
+            let d3 = parseFloat(document.getElementById('tab-d3').value) || 0;
+            let total = init + d1 + d2 + d3;
+
+            document.getElementById('tab-res').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            logConsole(`[Act 9 Tabungan] Uang awal: ${init}, H1: ${d1}, H2: ${d2}, H3: ${d3} => Total: Rp${total}`);
+        }
+
+        // Rubric Auto Calculator
+        function calcRubric() {
+            let total = 0;
+            for(let i = 0; i < 8; i++) {
+                const selected = document.querySelector(`input[name="rub-${i}"]:checked`);
+                if(selected) {
+                    total += parseInt(selected.value);
+                }
+            }
+            let pct = Math.round((total / 32) * 100);
+            document.getElementById('rub-score-display').innerText = `${total} / 32 (${pct}%)`;
+        }
+
+        // Local Storage Auto Save & Load
+        function saveAllProgress() {
+            const inputs = document.querySelectorAll('input, textarea');
+            const data = {};
+            inputs.forEach((el, index) => {
+                if(el.type === 'radio') {
+                    if(el.checked) data[el.name] = el.value;
+                } else if(el.id) {
+                    data[el.id] = el.value;
+                }
+            });
+            localStorage.setItem('lkpd_js_smkn1', JSON.stringify(data));
+            alert('Semua isian LKPD berhasil disimpan ke memori browser!');
+        }
+
+        function loadAllProgress() {
+            const saved = localStorage.getItem('lkpd_js_smkn1');
+            if(saved) {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(key => {
+                    const el = document.getElementById(key);
+                    if(el) {
+                        el.value = data[key];
+                    } else {
+                        const radio = document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
+                        if(radio) radio.checked = true;
+                    }
+                });
+                calcRubric();
+            }
+        }
+
+        window.onload = function() {
+            loadAllProgress();
+        };
+    </script>
+</body>
+</html>
+```
